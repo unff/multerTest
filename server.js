@@ -1,5 +1,7 @@
 const express = require('express');
 const multer = require('multer');
+const fs = require('fs')
+const path = require('path')
 
 var storage = multer.diskStorage({
     destination: function(req,file,callback) {
@@ -7,7 +9,15 @@ var storage = multer.diskStorage({
     }
     ,
     filename: function(req,file,callback) {
-        callback(null, file.originalname)
+        let filename =  ''
+        if (fs.existsSync('../uploads/'+file.originalname)) {
+            let rnd = (Math.floor(1000 + Math.random() * 9000)).toString()
+            let f = file.originalname.split('.')
+            filename = f[0] + '-' +  rnd + '.' + f[1]
+        } else {
+            filename = file.originalname
+        }
+        callback(null, filename)
     }
 })
 
@@ -22,6 +32,7 @@ app.get('/', (req, res) => {
 
 // It's very crucial that the file name matches the name attribute in your html
 app.post('/', upload.single('file-to-upload'), (req, res) => {
+
   res.redirect('/');
 });
 
