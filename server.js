@@ -5,12 +5,12 @@ const path = require('path')
 
 var storage = multer.diskStorage({
     destination: function(req,file,callback) {
-        callback(null, '../uploads')
+        callback(null, 'c://images')
     }
     ,
     filename: function(req,file,callback) {
         let filename =  ''
-        if (fs.existsSync('../uploads/'+file.originalname)) {
+        if (fs.existsSync('c://images/'+file.originalname)) {
             let rnd = (Math.floor(1000 + Math.random() * 9000)).toString()
             let f = file.originalname.split('.')
             filename = f[0] + '-' +  rnd + '.' + f[1]
@@ -26,14 +26,14 @@ const upload = multer({ storage: storage })
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+app.get('/multerTest/', (req, res) => {
+  res.sendFile(__dirname + '/index2.html');
 });
 
 // It's very crucial that the file name matches the name attribute in your html
-app.post('/', upload.single('file-to-upload'), (req, res) => {
+app.post('/multerTest/', upload.single('file-to-upload'), (req, res) => {
 
-  res.redirect('/');
+  res.redirect('/multerTest/');
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
